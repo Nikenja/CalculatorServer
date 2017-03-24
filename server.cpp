@@ -3,6 +3,8 @@
 #include <iostream>
 #include <QTcpSocket>
 #include <QByteArray>
+#include <QTextStream>
+#include <QStringList>
 
 Server::Server(int port, QObject *parent) : QObject(parent){
     this->server = new QTcpServer(this);
@@ -22,5 +24,25 @@ void Server::newConnection(){
 }
 
 void Server::readClientRequest(){
-    std::cout << "hi" << std::endl;
+    QTcpSocket *socket = nullptr;
+    socket = qobject_cast<QTcpSocket*>(sender());
+    if(socket != nullptr){
+        QTextStream inputStream(socket);
+        QStringList allInputData("");
+        while(socket->bytesAvailable())
+             allInputData.append(inputStream.readLine());
+        QString resultExression = allInputData.join("");
+        calculationExpressionResult(resultExression);
+        //проверку на валидность?
+    }
+    else
+        std::cout << "Bad cast" << std::endl;
+}
+
+void Server::calculationExpressionResult(const QString &resultExpression){
+
+}
+
+void Server::sendAnswerToClient(){
+
 }
