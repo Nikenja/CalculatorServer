@@ -11,8 +11,9 @@ public:
     explicit Server(int port, QObject *parent = 0);
 private:
     QTcpServer *server;
-    void calculationExpressionResult(const QString &resultExpression);
-    void sendAnswerToClient();
+    QString calculationExpressionResult(const QString &expression);
+    void sendAnswerToClient(QTcpSocket *socket, const QString answer);
+    bool isValidExpression(const QString &expression);
 signals:
 
 public slots:
