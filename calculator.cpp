@@ -26,7 +26,7 @@ QString Calculator::calculateExression(const QString &expression){
 }
 
 QStringList Calculator::shuntingYard(const QString &expression){
-    bool previouslyIsOperation = false;
+    bool previousIsOperation = false;
     QStringList expressionInPolish;
     QStack<QChar> operatorsFromExpression;
     int seek = 0;
@@ -36,18 +36,18 @@ QStringList Calculator::shuntingYard(const QString &expression){
         seek+=1;
     }
     for(auto pToken = expression.begin() + seek; pToken != expression.end(); ++pToken){
-        if(pToken->isDigit()){
+        if(pToken->isDigit() || *pToken == '.'){
             number.append(*pToken);
-            previouslyIsOperation = false;
+            previousIsOperation = false;
         }
         else{
-            if(previouslyIsOperation){
+            if(previousIsOperation){
                 number.append(*pToken);
                 continue;
             }
             expressionInPolish.push_back(number);
             number = "";
-            previouslyIsOperation = true;
+            previousIsOperation = true;
             if(*pToken == '+' || *pToken == '-'){
                 if(!operatorsFromExpression.isEmpty() && (operatorsFromExpression.back() == '*' || operatorsFromExpression.back() == '/'))
                     while(!operatorsFromExpression.isEmpty())
