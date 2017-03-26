@@ -19,11 +19,9 @@ bool ExpressionValidator::isCorrectExpression(const QString &expression){
             return false;
     }
     for(; tokenIndex < expression.size(); ++tokenIndex){
-
-        if(expression[tokenIndex].isDigit()){
+        if(expression[tokenIndex].isDigit())
             if(isValidDigitPosition(tokenIndex, isPreviousDigit, isPreviousOperator, isPreviousDot))
                 continue;
-        }
         if(isOperator(expression[tokenIndex])){
             if(isMinus(expression[tokenIndex])){
                 if(isValidMinusOperatorPosition(tokenIndex, isPreviousDigit, isPreviousOperator, isPreviousDot))
@@ -33,10 +31,9 @@ bool ExpressionValidator::isCorrectExpression(const QString &expression){
                 if(isValidOperatorPosition(tokenIndex, isPreviousDigit, isPreviousOperator, isPreviousDot))
                     continue;
         }
-        if(isDot(expression[tokenIndex])){
+        if(isDot(expression[tokenIndex]))
             if(isValidDotPosition(tokenIndex, isPreviousDigit, isPreviousOperator, isPreviousDot))
                 continue;
-        }
         return false;
     }
     return isPreviousDigit;

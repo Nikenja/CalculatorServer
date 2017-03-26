@@ -16,14 +16,4 @@ private:
     QString calculateBinaryExpression(double operand1, double operand2, const QString &operation);
 };
 
-class CalculatorDivByZero : public std::exception{
-public:
-    const char *what(){return "Деление на ноль";}
-};
-
-class CalculatorUnknowOperator : public std::exception{
-public:
-    const char *what(){return "Неизвестный оператор";}
-};
-
 #endif // CALCULATOR_H

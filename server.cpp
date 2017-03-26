@@ -7,7 +7,6 @@
 #include <QStringList>
 #include "expressionvalidator.h"
 #include "calculator.h"
-#include <QDebug>
 
 Server::Server(int port, QObject *parent) : QObject(parent){
     this->server = new QTcpServer(this);
