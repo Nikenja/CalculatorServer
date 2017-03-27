@@ -15,12 +15,12 @@ private:
 
 class ReversePolishNotationEvaluatorDivByZero : public std::exception{
 public:
-    const char *what(){return "Деление на ноль";}
+    const char *what(){return "Div by zero";}
 };
 
 class ReversePolishNotationEvaluatorUnknowOperator : public std::exception{
 public:
-    const char *what(){return "Неизвестный оператор";}
+    const char *what(){return "Unknow operator";}
 };
 
 #endif // REVERSEPOLISHNOTATIONEVALUATOR_H

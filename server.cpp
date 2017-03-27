@@ -21,8 +21,9 @@ Server::Server(int port, QObject *parent) : QObject(parent){
 void Server::newConnection(){
     QTcpSocket *socket = this->server->nextPendingConnection();
     connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
+    connect(socket, SIGNAL(disconnected()), this, SLOT(msgClientDisconnect()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(readClientRequest()));
-    std::cout << "Новое подключние" << std::endl;
+    std::cout << "New connection" << std::endl;
 }
 
 void Server::readClientRequest(){
@@ -33,14 +34,17 @@ void Server::readClientRequest(){
         QStringList allInputData("");
         while(socket->bytesAvailable())
              allInputData.append(inputStream.readAll());
-        QString resultExression = allInputData.join("");
-        if(isValidExpression(resultExression))
-            sendAnswerToClient(socket,calculationExpressionResult(resultExression));
+        QString inputExpression = allInputData.join("");
+        if(isValidExpression(inputExpression)){
+            QString outputExpression = calculationExpressionResult(inputExpression);
+            printInputOutputExpression(inputExpression,outputExpression);
+            sendAnswerToClient(socket,outputExpression);
+        }
         else
-            sendAnswerToClient(socket,"Некорректный ввод");
+            sendAnswerToClient(socket,"Invalid input");
     }
     else
-        std::cout << "Bad cast" << std::endl;
+        std::cerr << "Bad cast" << std::endl;
 }
 
 QString Server::calculationExpressionResult(const QString &expression){
@@ -49,11 +53,24 @@ QString Server::calculationExpressionResult(const QString &expression){
 }
 
 void Server::sendAnswerToClient(QTcpSocket *socket, const QString answer){
-    QByteArray outData(answer.toUtf8());
+    QByteArray outData = QByteArray::fromStdString(answer.toStdString());
     socket->write(outData);
 }
 
 bool Server::isValidExpression(const QString &expression){
     ExpressionValidator expressionValidator;
     return expressionValidator.isCorrectExpression(expression);
+}
+
+void Server::msgClientDisconnect(){
+    std::cout << "Client disconnect" << std::endl;
+}
+
+void Server::printInputOutputExpression(const QString &inputExpression, const QString &outputExpression){
+    QString result("Input expression: " + inputExpression + ", Output expression: " + outputExpression);
+    printMsg(result);
+}
+
+void Server::printMsg(const QString &msg){
+    std::cout << msg.toStdString() << std::endl;
 }
